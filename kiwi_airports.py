@@ -13,12 +13,10 @@ api = ('https://api.skypicker.com/locations?type=subentity&term=GB'
 '&locale=en-US&location_types=airport&limit=60&sort=name')
 
 data = json.loads(requests.get(api).content)
-position = -1
 if '--help' in argv:
     print(_help)
 else:
-    for location in data['locations']:
-        position += 1
+    for position, location in enumerate(data['locations']):
         city = location['city']['name']
         airport = location['name']
         iata = location['code']
