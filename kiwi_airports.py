@@ -9,7 +9,9 @@ _help = '''type in any of the fallowing command:
             --names - name of the airport
             --full - print every detail from each airport
 '''
-api = 'https://api.skypicker.com/locations?type=subentity&term=GB&locale=en-US&location_types=airport&limit=60&sort=name'
+api = ('https://api.skypicker.com/locations?type=subentity&term=GB'
+'&locale=en-US&location_types=airport&limit=60&sort=name')
+
 data = json.loads(requests.get(api).content)
 
 city = []
@@ -24,8 +26,12 @@ else:
         city.append(location['city']['name'])
         airport.append(location['name'])
         iata.append(location['code'])
-        lon.append(location['location']['lot'])
+        lon.append(location['location']['lon'])
         lat.append(location['location']['lat'])
+    
+    if len(argv) == 1:
+        for i in range(len(city)):
+            print(airport[i], city[i], iata[i], lat[i], lon[i])
     
     for command in argv[1:]:
         if command == '--cities':
@@ -41,9 +47,6 @@ else:
             for i in range(len(city)):
                 print(airport[i])
         elif command == '--full':
-            for location in data['locations']:
-                for j in location:
-                   print(j, '=', location[j])
-    else:
-        for i in range(len(city)):
-            print(airport[i], city[i], iata[i], location[i])
+            for location in range(len(city)):
+                for key, val in data['locations'][location].items():
+                   print(key, '=', val)
