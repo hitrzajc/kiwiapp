@@ -1,6 +1,7 @@
-from sys import argv
+import sys
 import requests
 import json
+
 _help = '''type in any of the fallowing command:
             --help - print help message
             --cities - cities with airports
@@ -12,18 +13,25 @@ _help = '''type in any of the fallowing command:
 api = ('https://api.skypicker.com/locations?type=subentity&term=GB'
 '&locale=en-US&location_types=airport&limit=60&sort=name')
 
-data = json.loads(requests.get(api).content)
-if '--help' in argv:
+if '--help' in sys.argv:
     print(_help)
 else:
-    for position, location in enumerate(data['locations']):
+    try:
+        response = requests.get(api)
+        response.raise_for_status()
+        data = json.loads(response.content)
+    except(requests.exceptions.HTTPError, ValueError) as error:
+        print('Something went wrong:', error)
+        sys.exit(1)
+    
+    for location in data['locations']:
         city = location['city']['name']
         airport = location['name']
         iata = location['code']
         lon = location['location']['lon']
         lat = location['location']['lat']
     
-        for command in argv[1:]:
+        for command in sys.argv[1:]:
             if command == '--cities':
                 print(city, airport)
             elif command == '--coords':
@@ -33,7 +41,7 @@ else:
             elif command == 'names':
                 print(airport)
             elif command == '--full':
-                for key, val in data['locations'][position].items():
+                for key, val in location.items():
                     print(key, '=', val)
         else:
             print(airport, city, iata, lat, lon)
