@@ -21,7 +21,7 @@ for i in data['locations']:
     city.append(i['city']['name'])
     airport.append(i['name'])
     iata.append(i['code'])
-    location.append([[i['lat'],i['lon']]])
+    location.append([[i['location']['lat'],i['location']['lon']]])
 
 if len(argv) == 1:
     for i in range(len(city)):
