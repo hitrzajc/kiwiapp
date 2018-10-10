@@ -23,25 +23,24 @@ else:
     except(requests.exceptions.HTTPError, ValueError) as error:
         print('Something went wrong:', error)
         sys.exit(1)
-    
     for location in data['locations']:
         city = location['city']['name']
         airport = location['name']
         iata = location['code']
         lon = location['location']['lon']
         lat = location['location']['lat']
-    
+
         for command in sys.argv[1:]:
             if command == '--cities':
                 print(city, airport)
             elif command == '--coords':
                 print(lat, lon)
-            elif command == 'iata':
+            elif command == '--iata':
                 print(iata)
-            elif command == 'names':
+            elif command == '--names':
                 print(airport)
             elif command == '--full':
                 for key, val in location.items():
                     print(key, '=', val)
-        else:
+        if len(sys.argv) == 1:
             print(airport, city, iata, lat, lon)
