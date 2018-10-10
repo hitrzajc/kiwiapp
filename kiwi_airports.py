@@ -23,6 +23,7 @@ else:
     except(requests.exceptions.HTTPError, ValueError) as error:
         print('Something went wrong:', error)
         sys.exit(1)
+
     for location in data['locations']:
         city = location['city']['name']
         airport = location['name']
@@ -42,5 +43,6 @@ else:
             elif command == '--full':
                 for key, val in location.items():
                     print(key, '=', val)
+        
         if len(sys.argv) == 1:
             print(airport, city, iata, lat, lon)
